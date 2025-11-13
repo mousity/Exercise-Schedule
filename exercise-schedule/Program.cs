@@ -118,7 +118,36 @@ namespace exercise_schedule{
 
         private static void Insert()
         {
-            
+            string? date = GetDate();
+            int? minutes = GetMinutes();
+
+            using (var connection = new SqliteConnection(connectionString))
+            {
+                connection.Open();
+                var tableCommand = connection.CreateCommand();
+                tableCommand.CommandText = $"INSERT INTO exercise_schedule('Date', Quantity) VALUES ($date, $quantity)";
+                tableCommand.Parameters.AddWithValue("$date", date.ToString());
+                tableCommand.Parameters.AddWithValue("$quantity", minutes);
+
+                tableCommand.ExecuteNonQuery(); 
+
+
+                connection.Close();
+            }
+        }
+
+        internal static string? GetDate()
+        {
+            Console.WriteLine("Please enter a date you exercised in dd-mm-yy format. Type 0 to exit to the main menu.");
+            string input = Console.ReadLine();
+            return input;
+        }
+
+        internal static int? GetMinutes()
+        {
+            Console.WriteLine("Please enter the amount of minutes you exercised on that day. Type 0 to exit to the main menu.");
+            int input = Convert.ToInt32(Console.ReadLine());
+            return input;
         }
 
         private static void Delete()
