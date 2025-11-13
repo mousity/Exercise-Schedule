@@ -7,7 +7,7 @@ namespace exercise_schedule{
     class Program()
     {
         // Making database connection string
-        static string connectionString = @"Data Source=exercise-schedule";
+        static string connectionString = @"Data Source=exercise-schedule.db";
         static void Main(string[] args)
         {
             
@@ -52,6 +52,7 @@ namespace exercise_schedule{
                 {
                     case 0:
                         closeApp = true;
+                        Console.WriteLine("Goodbye!");
                         break;
                     case 1:
                         GetAllRecords();
@@ -78,7 +79,41 @@ namespace exercise_schedule{
 
         private static void GetAllRecords()
         {
-            
+            using (var connection = new SqliteConnection(connectionString))
+            {
+                connection.Open();
+                var tableCommand = connection.CreateCommand();
+                tableCommand.CommandText = $"SELECT * FROM exercise_schedule";
+
+                List<ExerciseSchedule> tableData = new List<ExerciseSchedule>();
+                SqliteDataReader reader = tableCommand.ExecuteReader();
+
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        tableData.Add(
+                            new ExerciseSchedule
+                            {
+                                Id = reader.GetInt32(0),
+                                Date = DateTime.Parse(reader.GetString(1)),
+                                Quantity = reader.GetInt32(2)
+                            }
+                        );
+                    }
+                } else
+                {
+                    Console.WriteLine("\nNo rows to retrieve!\n");
+                }
+
+                connection.Close();
+                Console.WriteLine("-------------------------------------");
+                foreach(var entry in tableData)
+                {
+                    Console.WriteLine($"Id - {entry.Id} | Date - {entry.Date} | Minutes - {entry.Quantity}");
+                }
+                Console.WriteLine("-------------------------------------");
+            }
         }
 
         private static void Insert()
@@ -88,7 +123,7 @@ namespace exercise_schedule{
 
         private static void Delete()
         {
-            
+            Console.WriteLine("\nPlease pick the ID of the record you'd like to delete\n");
         }
 
         private static void Update()
@@ -99,5 +134,10 @@ namespace exercise_schedule{
 
     }
 
-    
+    public class ExerciseSchedule
+    {
+        public int Id { get; set; }
+        public DateTime Date { get; set; }
+        public int Quantity { get; set; }
+    }
 }
