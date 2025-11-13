@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Data;
 using Microsoft.Data.Sqlite;
+using Microsoft.VisualBasic.FileIO;
 
 namespace exercise_schedule{
     class Program()
@@ -52,12 +54,16 @@ namespace exercise_schedule{
                         closeApp = true;
                         break;
                     case 1:
+                        GetAllRecords();
                         break;
                     case 2:
+                        Insert();
                         break;
                     case 3:
+                        Delete();
                         break;
                     case 4:
+                        Update();
                         break;
                     default:
                         Console.WriteLine("Your input was not a number 0-4. Try again!");
@@ -68,6 +74,26 @@ namespace exercise_schedule{
 
             }
 
+        }
+
+        private static void GetAllRecords()
+        {
+            
+        }
+
+        private static void Insert()
+        {
+            
+        }
+
+        private static void Delete()
+        {
+            
+        }
+
+        private static void Update()
+        {
+            
         }
 
 
