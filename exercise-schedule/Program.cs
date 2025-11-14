@@ -2,6 +2,7 @@
 using System.Data;
 using Microsoft.Data.Sqlite;
 using Microsoft.VisualBasic.FileIO;
+using SQLitePCL;
 
 namespace exercise_schedule{
     class Program()
@@ -152,7 +153,20 @@ namespace exercise_schedule{
 
         private static void Delete()
         {
+            GetAllRecords();
             Console.WriteLine("\nPlease pick the ID of the record you'd like to delete\n");
+            int input = Convert.ToInt32(Console.ReadLine());
+
+            using (var connection = new SqliteConnection(connectionString))
+            {
+                connection.Open();
+                var tableCommand = connection.CreateCommand();
+                tableCommand.CommandText = $"DELETE from exercise_schedule WHERE id = $id";
+                tableCommand.Parameters.AddWithValue("$id", input);
+                tableCommand.ExecuteNonQuery();
+
+                connection.Close();
+            }
         }
 
         private static void Update()
